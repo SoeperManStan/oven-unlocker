@@ -1,0 +1,984 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oven Unlocker — SoepenSoul</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+--purple: #6B2D91;
+--orange: #F39C12;
+--green: #27AE60;
+--dark: #1A1A2E;
+--cream: #FAF6F0;
+--text: #2C2C2C;
+--muted: #888;
+--card: #ffffff;
+--shadow: 0 8px 40px rgba(107,45,145,0.10);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+font-family: 'DM Sans', sans-serif;
+background: var(--cream);
+color: var(--text);
+min-height: 100vh;
+}
+
+/* HEADER */
+header {
+background: var(--dark);
+padding: 0 24px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+height: 64px;
+position: sticky;
+top: 0;
+z-index: 100;
+}
+.logo {
+font-family: 'Playfair Display', serif;
+color: #fff;
+font-size: 1.25rem;
+letter-spacing: -0.02em;
+}
+.logo span { color: var(--orange); }
+.lang-toggle {
+display: flex;
+gap: 4px;
+}
+.lang-btn {
+padding: 4px 12px;
+border: 1px solid rgba(255,255,255,0.2);
+border-radius: 20px;
+background: transparent;
+color: rgba(255,255,255,0.5);
+font-size: 0.75rem;
+cursor: pointer;
+font-family: 'DM Sans', sans-serif;
+transition: all 0.2s;
+}
+.lang-btn.active {
+background: var(--orange);
+color: #fff;
+border-color: var(--orange);
+}
+
+/* HERO */
+.hero {
+background: linear-gradient(135deg, var(--dark) 0%, #2D1B4E 100%);
+padding: 60px 24px 48px;
+text-align: center;
+position: relative;
+overflow: hidden;
+}
+.hero::before {
+content: '';
+position: absolute;
+width: 400px;
+height: 400px;
+background: radial-gradient(circle, rgba(243,156,18,0.12) 0%, transparent 70%);
+top: -100px;
+right: -100px;
+border-radius: 50%;
+}
+.hero-badge {
+display: inline-block;
+background: rgba(243,156,18,0.15);
+border: 1px solid rgba(243,156,18,0.3);
+color: var(--orange);
+padding: 6px 16px;
+border-radius: 20px;
+font-size: 0.75rem;
+font-weight: 600;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+margin-bottom: 20px;
+}
+.hero h1 {
+font-family: 'Playfair Display', serif;
+font-size: clamp(2rem, 6vw, 3.5rem);
+color: #fff;
+line-height: 1.1;
+margin-bottom: 16px;
+}
+.hero h1 em {
+color: var(--orange);
+font-style: italic;
+}
+.hero p {
+color: rgba(255,255,255,0.65);
+font-size: 1rem;
+max-width: 480px;
+margin: 0 auto 32px;
+line-height: 1.6;
+}
+
+/* OVEN SELECTOR */
+.selector-card {
+background: var(--card);
+border-radius: 20px;
+padding: 32px;
+max-width: 560px;
+margin: 0 auto;
+box-shadow: var(--shadow);
+}
+.selector-card label {
+display: block;
+font-size: 0.8rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+color: var(--muted);
+margin-bottom: 8px;
+}
+.select-row {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 12px;
+margin-bottom: 20px;
+}
+select {
+width: 100%;
+padding: 12px 16px;
+border: 1.5px solid #E8E0F0;
+border-radius: 12px;
+font-family: 'DM Sans', sans-serif;
+font-size: 0.95rem;
+color: var(--text);
+background: #fff;
+cursor: pointer;
+appearance: none;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+background-repeat: no-repeat;
+background-position: right 14px center;
+}
+select:focus { outline: none; border-color: var(--purple); }
+
+.unlock-btn {
+width: 100%;
+padding: 16px;
+background: var(--purple);
+color: #fff;
+border: none;
+border-radius: 14px;
+font-family: 'Playfair Display', serif;
+font-size: 1.1rem;
+cursor: pointer;
+transition: all 0.25s;
+position: relative;
+overflow: hidden;
+}
+.unlock-btn:hover {
+background: #7B35A6;
+transform: translateY(-1px);
+box-shadow: 0 8px 24px rgba(107,45,145,0.3);
+}
+.unlock-btn:active { transform: translateY(0); }
+
+/* MAIN CONTENT */
+main { max-width: 720px; margin: 0 auto; padding: 40px 20px 80px; }
+
+/* MODE TOGGLE */
+.mode-toggle {
+display: flex;
+background: #fff;
+border-radius: 16px;
+padding: 6px;
+box-shadow: var(--shadow);
+margin-bottom: 32px;
+}
+.mode-btn {
+flex: 1;
+padding: 14px;
+border: none;
+border-radius: 12px;
+background: transparent;
+font-family: 'DM Sans', sans-serif;
+font-weight: 600;
+font-size: 0.9rem;
+cursor: pointer;
+transition: all 0.25s;
+color: var(--muted);
+}
+.mode-btn.active {
+color: #fff;
+}
+.mode-btn.mflow.active { background: var(--orange); }
+.mode-btn.vlock.active { background: var(--green); }
+.mode-indicator {
+font-size: 0.75rem;
+display: block;
+font-weight: 400;
+opacity: 0.8;
+margin-top: 2px;
+}
+
+/* CONTENT PANELS */
+.panel { display: none; }
+.panel.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* MODEL BADGE */
+.model-badge {
+display: flex;
+align-items: center;
+gap: 12px;
+background: #fff;
+border-radius: 16px;
+padding: 16px 20px;
+margin-bottom: 24px;
+box-shadow: var(--shadow);
+}
+.model-icon {
+width: 48px;
+height: 48px;
+background: linear-gradient(135deg, var(--purple), #9B4DCA);
+border-radius: 12px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.4rem;
+flex-shrink: 0;
+}
+.model-info h3 {
+font-family: 'Playfair Display', serif;
+font-size: 1.1rem;
+}
+.model-info p { font-size: 0.8rem; color: var(--muted); }
+
+/* RUBRICS */
+.section-title {
+font-family: 'Playfair Display', serif;
+font-size: 1.3rem;
+margin-bottom: 16px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.rubric-grid {
+display: grid;
+gap: 12px;
+margin-bottom: 32px;
+}
+
+.rubric-card {
+background: #fff;
+border-radius: 16px;
+overflow: hidden;
+box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+cursor: pointer;
+transition: box-shadow 0.2s;
+}
+.rubric-card:hover { box-shadow: var(--shadow); }
+
+.rubric-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 18px 20px;
+}
+.rubric-left {
+display: flex;
+align-items: center;
+gap: 14px;
+}
+.rubric-icon {
+width: 40px;
+height: 40px;
+border-radius: 10px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.2rem;
+flex-shrink: 0;
+}
+.rubric-title { font-weight: 600; font-size: 0.95rem; }
+.rubric-sub { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+.rubric-arrow {
+transition: transform 0.25s;
+color: var(--muted);
+font-size: 0.8rem;
+}
+.rubric-card.open .rubric-arrow { transform: rotate(180deg); }
+
+.rubric-body {
+display: none;
+padding: 0 20px 20px;
+border-top: 1px solid #F0EAF8;
+}
+.rubric-card.open .rubric-body { display: block; animation: fadeIn 0.2s ease; }
+
+.tip-row {
+display: flex;
+gap: 10px;
+padding: 10px 0;
+border-bottom: 1px solid #F5F5F5;
+font-size: 0.88rem;
+line-height: 1.5;
+}
+.tip-row:last-child { border-bottom: none; }
+.tip-row .dot {
+width: 6px;
+height: 6px;
+border-radius: 50%;
+background: var(--orange);
+flex-shrink: 0;
+margin-top: 7px;
+}
+
+/* REVERSE SEAR SPECIAL CARD */
+.special-card {
+background: linear-gradient(135deg, var(--dark) 0%, #3D1F5A 100%);
+border-radius: 20px;
+padding: 28px;
+color: #fff;
+margin-bottom: 32px;
+cursor: pointer;
+transition: transform 0.2s;
+}
+.special-card:hover { transform: translateY(-2px); }
+.special-card-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+margin-bottom: 12px;
+}
+.special-badge {
+background: var(--orange);
+color: #fff;
+padding: 4px 10px;
+border-radius: 6px;
+font-size: 0.7rem;
+font-weight: 700;
+letter-spacing: 0.06em;
+}
+.special-card h3 {
+font-family: 'Playfair Display', serif;
+font-size: 1.4rem;
+margin-bottom: 8px;
+}
+.special-card p { opacity: 0.75; font-size: 0.88rem; line-height: 1.6; }
+.special-body {
+display: none;
+margin-top: 20px;
+padding-top: 20px;
+border-top: 1px solid rgba(255,255,255,0.15);
+}
+.special-card.open .special-body { display: block; animation: fadeIn 0.3s ease; }
+.recipe-step {
+display: flex;
+gap: 14px;
+margin-bottom: 14px;
+align-items: flex-start;
+}
+.step-num {
+width: 28px;
+height: 28px;
+border-radius: 50%;
+background: var(--orange);
+color: #fff;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 0.8rem;
+font-weight: 700;
+flex-shrink: 0;
+}
+.step-text { font-size: 0.88rem; line-height: 1.6; opacity: 0.9; }
+
+/* CTA / UNLOCK */
+.cta-card {
+background: linear-gradient(135deg, var(--purple), #9B3DCA);
+border-radius: 20px;
+padding: 32px;
+text-align: center;
+color: #fff;
+margin-bottom: 24px;
+}
+.cta-card h3 {
+font-family: 'Playfair Display', serif;
+font-size: 1.5rem;
+margin-bottom: 8px;
+}
+.cta-card p { opacity: 0.8; margin-bottom: 24px; font-size: 0.9rem; }
+.price-row {
+display: flex;
+gap: 12px;
+justify-content: center;
+flex-wrap: wrap;
+}
+.price-option {
+background: rgba(255,255,255,0.15);
+border-radius: 12px;
+padding: 12px 20px;
+cursor: pointer;
+transition: background 0.2s;
+border: 1.5px solid rgba(255,255,255,0.2);
+}
+.price-option:hover { background: rgba(255,255,255,0.25); }
+.price-option.featured { background: #fff; color: var(--purple); border-color: #fff; }
+.price-big { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; }
+.price-small { font-size: 0.75rem; opacity: 0.7; }
+.price-option.featured .price-small { opacity: 0.5; color: var(--purple); }
+
+/* CONTRIBUTION MODE — SLAPEND */
+.contribution-section {
+opacity: 0.45;
+pointer-events: none;
+}
+.contribution-section.active-mode {
+opacity: 1;
+pointer-events: auto;
+}
+.contribution-card {
+background: #fff;
+border: 2px dashed #D0B8E8;
+border-radius: 20px;
+padding: 28px;
+text-align: center;
+}
+.contribution-card h3 {
+font-family: 'Playfair Display', serif;
+color: var(--purple);
+margin-bottom: 8px;
+}
+.contribution-card p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 20px; }
+.contrib-btn {
+background: var(--purple);
+color: #fff;
+border: none;
+padding: 14px 28px;
+border-radius: 12px;
+font-family: 'DM Sans', sans-serif;
+font-weight: 600;
+font-size: 0.9rem;
+cursor: pointer;
+opacity: 0.5;
+}
+.coming-soon-tag {
+display: inline-block;
+background: #F0EAF8;
+color: var(--purple);
+padding: 4px 12px;
+border-radius: 20px;
+font-size: 0.75rem;
+font-weight: 600;
+margin-bottom: 16px;
+}
+
+/* V-LOCK SPECIFIC */
+.vlock-accent { color: var(--green); }
+.vlock-dot { background: var(--green) !important; }
+
+/* FOOTER */
+footer {
+background: var(--dark);
+color: rgba(255,255,255,0.4);
+text-align: center;
+padding: 24px;
+font-size: 0.78rem;
+}
+footer a { color: var(--orange); text-decoration: none; }
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+.select-row { grid-template-columns: 1fr; }
+.hero { padding: 40px 20px 36px; }
+.selector-card { border-radius: 16px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">Oven<span>Unlocker</span> · SoepenSoul</div>
+<div class="lang-toggle">
+<button class="lang-btn active" onclick="setLang('nl')">NL</button>
+<button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+</header>
+
+<!-- HERO / SELECTOR -->
+<section class="hero">
+<div class="hero-badge" id="hero-badge">🔓 Beta · Gratis uitproberen</div>
+<h1 id="hero-title">Jouw oven<br>weet meer <em>dan jij denkt</em></h1>
+<p id="hero-sub">Kies je merk en model. Ontgrendel de verborgen modi, temperatuurtips en recepten die Bosch nooit in de handleiding zette.</p>
+<div class="selector-card">
+<div class="select-row">
+<div>
+<label id="label-brand">Merk</label>
+<select id="brand-select" onchange="updateModels()">
+<option value="">Selecteer merk</option>
+<option value="bosch">Bosch</option>
+<option value="siemens">Siemens</option>
+<option value="miele">Miele</option>
+<option value="aeg">AEG</option>
+<option value="samsung">Samsung</option>
+<option value="neff">Neff</option>
+<option value="whirlpool">Whirlpool</option>
+<option value="zanussi">Zanussi</option>
+<option value="gorenje">Gorenje</option>
+<option value="other">Ander merk</option>
+</select>
+</div>
+<div>
+<label id="label-model">Model</label>
+<select id="model-select">
+<option value="">Selecteer eerst merk</option>
+</select>
+</div>
+</div>
+<button class="unlock-btn" onclick="unlockOven()" id="unlock-btn">
+🔓 <span id="btn-text">Ontgrendel mijn oven</span>
+</button>
+</div>
+</section>
+
+<!-- MAIN APP -->
+<main id="app-content" style="display:none;">
+
+<!-- MODEL BADGE -->
+<div class="model-badge">
+<div class="model-icon">🔥</div>
+<div class="model-info">
+<h3 id="model-title">Bosch HBA534EB0</h3>
+<p id="model-sub">Serie 4 · 71L · 9 verwarmingsfuncties · NL/EN beschikbaar</p>
+</div>
+</div>
+
+<!-- MODE TOGGLE -->
+<div class="mode-toggle">
+<button class="mode-btn mflow active" onclick="setMode('mflow')">
+⚡ M-FLOW
+<span class="mode-indicator" id="mflow-desc">Snel · Krokant · Hoge hitte</span>
+</button>
+<button class="mode-btn vlock" onclick="setMode('vlock')">
+🌿 V-LOCK
+<span class="mode-indicator" id="vlock-desc">Langzaam · Sappig · Voeding behoud</span>
+</button>
+</div>
+
+<!-- M-FLOW PANEL -->
+<div class="panel active" id="panel-mflow">
+
+<p class="section-title">⚡ M-FLOW <span style="font-weight:300;font-size:1rem;color:var(--muted)">— snel en krokant</span></p>
+
+<div class="rubric-grid">
+
+<!-- Rubric 1 -->
+<div class="rubric-card" onclick="toggleRubric(this)">
+<div class="rubric-header">
+<div class="rubric-left">
+<div class="rubric-icon" style="background:#FFF3E0;">🌡️</div>
+<div>
+<div class="rubric-title" id="r1-title">Temperatuurgids</div>
+<div class="rubric-sub" id="r1-sub">Optimale instellingen per gerecht</div>
+</div>
+</div>
+<div class="rubric-arrow">▼</div>
+</div>
+<div class="rubric-body">
+<div class="tip-row"><span class="dot"></span><span><b>Pizza & quiche:</b> 220°C Hetelucht — gebruik de onderste richel voor knapperige bodem</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Kip (heel):</b> 200°C Boven-/onderwarmte eerste 20 min, daarna 180°C</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Aardappelen:</b> 200°C Hetelucht — halveer ze, olie erop, 35 min zonder omdraaien</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Brood:</b> 230°C + stoomfunctie (als aanwezig) voor professionele korst</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Groenten grillen:</b> Grillstand 250°C, richel 4 van boven, 8-12 min</span></div>
+</div>
+</div>
+
+<!-- Rubric 2 -->
+<div class="rubric-card" onclick="toggleRubric(this)">
+<div class="rubric-header">
+<div class="rubric-left">
+<div class="rubric-icon" style="background:#E8F5E9;">📍</div>
+<div>
+<div class="rubric-title" id="r2-title">Richel-geheimen</div>
+<div class="rubric-sub" id="r2-sub">Welke positie, wanneer en waarom</div>
+</div>
+</div>
+<div class="rubric-arrow">▼</div>
+</div>
+<div class="rubric-body">
+<div class="tip-row"><span class="dot"></span><span><b>Richel 1 (onderste):</b> Pizza, taart, quiche — warmte van onder voor droge bodems</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Richel 2:</b> Vlees en vis — gelijkmatige garing aan alle kanten</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Richel 3 (midden):</b> Standaard positie voor de meeste gerechten</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Richel 4:</b> Gratins en grillen — dichtbij het grillelement</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Tip:</b> Meerdere schalen tegelijk? Gebruik richel 1 én 3 met hetelucht — nooit boven/onderwarmte</span></div>
+</div>
+</div>
+
+<!-- Rubric 3 -->
+<div class="rubric-card" onclick="toggleRubric(this)">
+<div class="rubric-header">
+<div class="rubric-left">
+<div class="rubric-icon" style="background:#F3E5F5;">⚙️</div>
+<div>
+<div class="rubric-title" id="r3-title">Verborgen functies</div>
+<div class="rubric-sub" id="r3-sub">Wat staat er niet in de handleiding</div>
+</div>
+</div>
+<div class="rubric-arrow">▼</div>
+</div>
+<div class="rubric-body">
+<div class="tip-row"><span class="dot"></span><span><b>Resterende-warmte truc:</b> Zet de oven 8 min voor het einde uit — de warmte gaart verder, jij bespaart stroom</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Hetelucht 160°C = boven/onderwarmte 180°C</b> — altijd omrekenen bij oude recepten</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Poffers zonder pannetje:</b> Schaal met water op richel 1 tijdens broodbakken creëert stoom</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Ontdooi correct:</b> 30°C hetelucht — geen microgolf meer nodig voor vlees en brood</span></div>
+</div>
+</div>
+
+<!-- Rubric 4 -->
+<div class="rubric-card" onclick="toggleRubric(this)">
+<div class="rubric-header">
+<div class="rubric-left">
+<div class="rubric-icon" style="background:#E3F2FD;">🧹</div>
+<div>
+<div class="rubric-title" id="r4-title">Onderhoud & levensduur</div>
+<div class="rubric-sub" id="r4-sub">Zodat je oven 15+ jaar meegaat</div>
+</div>
+</div>
+<div class="rubric-arrow">▼</div>
+</div>
+<div class="rubric-body">
+<div class="tip-row"><span class="dot"></span><span><b>Pyrolyse planning:</b> Plan pyrolyse (zelfreinigend) op een dag thuis — duurt 2.5 uur, oven wordt 500°C</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Vetfilter:</b> Na elke pyrolysecyclus de bodemplaat verwijderen en schoonmaken</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Afdichtingsrubbers:</b> Check jaarlijks de rubber rand van de deur — beschadiging = warmteverlies</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Ventilatie:</b> Laat de oven na gebruik 10 min op stand 30°C draaien om vocht te verwijderen</span></div>
+</div>
+</div>
+
+<!-- Rubric 5 -->
+<div class="rubric-card" onclick="toggleRubric(this)">
+<div class="rubric-header">
+<div class="rubric-left">
+<div class="rubric-icon" style="background:#FFF8E1;">🍽️</div>
+<div>
+<div class="rubric-title" id="r5-title">Snelle weekmenu tips</div>
+<div class="rubric-sub" id="r5-sub">3 gerechten, 1 oven, minder dan 45 min</div>
+</div>
+</div>
+<div class="rubric-arrow">▼</div>
+</div>
+<div class="rubric-body">
+<div class="tip-row"><span class="dot"></span><span><b>Maandag:</b> Geroosterde kippendijen 200°C/35min richel 2 + aardappelpartjes richel 1</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Woensdag:</b> Zalm en asperges tegelijk 180°C hetelucht/20min — beide op aparte schalen</span></div>
+<div class="tip-row"><span class="dot"></span><span><b>Vrijdag:</b> Zelfgemaakte pizza 230°C/12min richel 1 — gebruik een voorverwarmde pizzasteen of bakplaat</span></div>
+</div>
+</div>
+</div>
+
+<!-- REVERSE SEAR SPECIAL -->
+<div class="special-card" onclick="toggleSpecial(this)">
+<div class="special-card-header">
+<div>
+<h3>🥩 Reverse Sear</h3>
+<p>De techniek die je oven transformeert tot een professionele keuken</p>
+</div>
+<span class="special-badge">UNLOCK</span>
+</div>
+<div class="special-body">
+<div class="recipe-step">
+<div class="step-num">1</div>
+<div class="step-text"><b>Oven op 80°C</b> Boven-/onderwarmte. Ribeye (3 cm dik) op richel 2. Kerntemperatuur: 52°C — gebruik een oventhermometer.</div>
+</div>
+<div class="recipe-step">
+<div class="step-num">2</div>
+<div class="step-text"><b>Wacht ~60-90 min.</b> Het vlees gaart traag en gelijkmatig. Geen haast. Geen stress. Dit is het geheim.</div>
+</div>
+<div class="recipe-step">
+<div class="step-num">3</div>
+<div class="step-text"><b>Pan op hoogste stand.</b> Ghee of reuzel. 90 seconden per kant — hard en snel voor de Maillard-korst.</div>
+</div>
+<div class="recipe-step">
+<div class="step-num">4</div>
+<div class="step-text"><b>Rust 5 min.</b> Nooit snijden. Dan serveren. Resultaat: restaurant-kwaliteit, thuis, met jouw Bosch.</div>
+</div>
+</div>
+</div>
+
+</div><!-- /panel-mflow -->
+
+<!-- V-LOCK PANEL -->
+<div class="panel" id="panel-vlock">
+<p class="section-title vlock-accent">🌿 V-LOCK <span style="font-weight:300;font-size:1rem;color:var(--muted)">— voeding behouden, smaak verdiepen</span></p>
+
+<div class="rubric-grid">
+<div class="rubric-card" onclick="toggleRubric(this)">
+<div class="rubric-header">
+<div class="rubric-left">
+<div class="rubric-icon" style="background:#E8F5E9;">🌿</div>
+<div>
+<div class="rubric-title">Lage temperatuur technieken</div>
+<div class="rubric-sub">60-120°C — waar de magie begint</div>
+</div>
+</div>
+<div class="rubric-arrow">▼</div>
+</div>
+<div class="rubric-body">
+<div class="tip-row"><span class="dot vlock-dot"></span><span><b>Sous-vide simulatie:</b> 60°C boven/onderwarmte voor vis en kip — de eiwitten stollen zachter</span></div>
+<div class="tip-row"><span class="dot vlock-dot"></span><span><b>Knoflook konfijt:</b> 90°C hetelucht, teentjes in olijfolie, 90 min — smelt als boter, maanden houdbaar</span></div>
+<div class="tip-row"><span class="dot vlock-dot"></span><span><b>Slow-roast tomaten:</b> 100°C, 2-3 uur — concentreert smaak 10x, basis voor SoepenSoul soepen</span></div>
+<div class="tip-row"><span class="dot vlock-dot"></span><span><b>Groenten drogen:</b> 70°C hetelucht, deur op kier met een houten lepel — preserveert vitamines</span></div>
+</div>
+</div>
+
+<div class="rubric-card" onclick="toggleRubric(this)">
+<div class="rubric-header">
+<div class="rubric-left">
+<div class="rubric-icon" style="background:#F3E5F5;">🧘</div>
+<div>
+<div class="rubric-title">Fermentatie & activering</div>
+<div class="rubric-sub">Gebruik je oven als fermenteer-kamer</div>
+</div>
+</div>
+<div class="rubric-arrow">▼</div>
+</div>
+<div class="rubric-body">
+<div class="tip-row"><span class="dot vlock-dot"></span><span><b>Zuurdesem rijzen:</b> 30°C hetelucht — ideale rijstemperatuur, consistent, geen tocht</span></div>
+<div class="tip-row"><span class="dot vlock-dot"></span><span><b>Yoghurt maken:</b> 40°C, 8 uur — pot in oven met handdoek eromheen voor isolatie</span></div>
+<div class="tip-row"><span class="dot vlock-dot"></span><span><b>Tempeh activering:</b> 30°C, 36 uur — doe dit alleen als je weet wat je doet, maar het kan</span></div>
+</div>
+</div>
+
+<div class="rubric-card" onclick="toggleRubric(this)">
+<div class="rubric-header">
+<div class="rubric-left">
+<div class="rubric-icon" style="background:#E3F2FD;">🫙</div>
+<div>
+<div class="rubric-title">Weckpotten & bewaren</div>
+<div class="rubric-sub">Je oven als conserveringsruimte</div>
+</div>
+</div>
+<div class="rubric-arrow">▼</div>
+</div>
+<div class="rubric-body">
+<div class="tip-row"><span class="dot vlock-dot"></span><span><b>Weckpotten steriliseren:</b> 120°C, 20 min — veiliger dan uitkoken, zeker voor grote batches</span></div>
+<div class="tip-row"><span class="dot vlock-dot"></span><span><b>Soep invriezen-klaar:</b> Laat soep 10 min op 100°C in ovenvaste pot — hitteschok doodt bacteriën</span></div>
+<div class="tip-row"><span class="dot vlock-dot"></span><span><b>Kruiden drogen:</b> 50°C, 2 uur — tijm, rozemarijn, oregano. Betere kwaliteit dan supermarkt</span></div>
+</div>
+</div>
+</div>
+</div><!-- /panel-vlock -->
+
+<!-- UNLOCK PDF CTA -->
+<div class="cta-card">
+<h3 id="cta-title">📄 Complete PDF gids</h3>
+<p id="cta-sub">Alles wat je hierboven ziet + exclusieve recepten, profielen en maandelijkse updates voor jouw Bosch.</p>
+<div class="price-row">
+<div class="price-option" onclick="checkout('once')">
+<div class="price-big">€12,50</div>
+<div class="price-small" id="once-label">Eénmalig · Jouw model</div>
+</div>
+<div class="price-option" onclick="checkout('monthly')">
+<div class="price-big">€4,95</div>
+<div class="price-small" id="monthly-label">Per maand · Alle modellen</div>
+</div>
+<div class="price-option featured" onclick="checkout('yearly')">
+<div class="price-big">€39,-</div>
+<div class="price-small" id="yearly-label">Per jaar · Bespaar 34%</div>
+</div>
+</div>
+</div>
+
+<!-- CONTRIBUTION MODE — SLAPEND -->
+<div class="contribution-section" id="contribution-zone">
+<div class="contribution-card">
+<span class="coming-soon-tag" id="contrib-tag">📡 Binnenkort beschikbaar</span>
+<h3 id="contrib-title">Jouw oven staat niet in de lijst?</h3>
+<p id="contrib-sub">Scan het typeplaatje van je oven en voeg hem toe aan onze database. Als beloning krijg je 1 maand Premium gratis — en help je duizenden andere koks.</p>
+<button class="contrib-btn" id="contrib-btn">📸 Scan & Bijdragen</button>
+</div>
+</div>
+
+</main>
+
+<footer>
+© 2025 SoepenSoul · <a href="https://www.soepensoul.nl">www.soepensoul.nl</a> · Culinair storytelling vanuit Amsterdam
+</footer>
+
+<script>
+// ============================================
+// TAAL
+// ============================================
+const translations = {
+nl: {
+badge: '🔓 Beta · Gratis uitproberen',
+title: 'Jouw oven<br>weet meer <em>dan jij denkt</em>',
+sub: 'Kies je merk en model. Ontgrendel de verborgen modi, temperatuurtips en recepten die Bosch nooit in de handleiding zette.',
+labelBrand: 'Merk',
+labelModel: 'Model',
+btnText: 'Ontgrendel mijn oven',
+mflowDesc: 'Snel · Krokant · Hoge hitte',
+vlockDesc: 'Langzaam · Sappig · Voeding behoud',
+ctaTitle: '📄 Complete PDF gids',
+ctaSub: 'Alles wat je hierboven ziet + exclusieve recepten, profielen en maandelijkse updates voor jouw Bosch.',
+onceLabel: 'Eénmalig · Jouw model',
+monthlyLabel: 'Per maand · Alle modellen',
+yearlyLabel: 'Per jaar · Bespaar 34%',
+contribTag: '📡 Binnenkort beschikbaar',
+contribTitle: 'Jouw oven staat niet in de lijst?',
+contribSub: 'Scan het typeplaatje van je oven en voeg hem toe aan onze database. Als beloning krijg je 1 maand Premium gratis — en help je duizenden andere koks.',
+contribBtn: '📸 Scan & Bijdragen'
+},
+en: {
+badge: '🔓 Beta · Try for free',
+title: 'Your oven knows more<br><em>than you think</em>',
+sub: 'Select your brand and model. Unlock the hidden modes, temperature tips and recipes your manufacturer never put in the manual.',
+labelBrand: 'Brand',
+labelModel: 'Model',
+btnText: 'Unlock my oven',
+mflowDesc: 'Fast · Crispy · High heat',
+vlockDesc: 'Slow · Juicy · Preserve nutrients',
+ctaTitle: '📄 Complete PDF guide',
+ctaSub: 'Everything above + exclusive recipes, profiles and monthly updates for your Bosch.',
+onceLabel: 'One-time · Your model',
+monthlyLabel: 'Per month · All models',
+yearlyLabel: 'Per year · Save 34%',
+contribTag: '📡 Coming soon',
+contribTitle: 'Your oven not in the list?',
+contribSub: 'Scan the type plate of your oven and add it to our database. As a reward, you get 1 month Premium free — and help thousands of other cooks.',
+contribBtn: '📸 Scan & Contribute'
+}
+};
+
+let currentLang = 'nl';
+function setLang(lang) {
+currentLang = lang;
+document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+const t = translations[lang];
+document.getElementById('hero-badge').textContent = t.badge;
+document.getElementById('hero-title').innerHTML = t.title;
+document.getElementById('hero-sub').textContent = t.sub;
+document.getElementById('label-brand').textContent = t.labelBrand;
+document.getElementById('label-model').textContent = t.labelModel;
+document.getElementById('btn-text').textContent = t.btnText;
+document.getElementById('mflow-desc').textContent = t.mflowDesc;
+document.getElementById('vlock-desc').textContent = t.vlockDesc;
+document.getElementById('cta-title').textContent = t.ctaTitle;
+document.getElementById('cta-sub').textContent = t.ctaSub;
+document.getElementById('once-label').textContent = t.onceLabel;
+document.getElementById('monthly-label').textContent = t.monthlyLabel;
+document.getElementById('yearly-label').textContent = t.yearlyLabel;
+document.getElementById('contrib-tag').textContent = t.contribTag;
+document.getElementById('contrib-title').textContent = t.contribTitle;
+document.getElementById('contrib-sub').textContent = t.contribSub;
+document.getElementById('contrib-btn').textContent = t.contribBtn;
+}
+
+// ============================================
+// MODELS DATABASE (uitbreidbaar)
+// ============================================
+const ovenData = {
+bosch: {
+label: 'Bosch',
+models: {
+'HBA534EB0': { name: 'Bosch HBA534EB0', sub: 'Serie 4 · 71L · 9 functies · Pyrolyse', unlocked: true },
+'HBG675BS1': { name: 'Bosch HBG675BS1', sub: 'Serie 8 · 71L · 13 functies · Steam', unlocked: false },
+'HBA171BS4': { name: 'Bosch HBA171BS4', sub: 'Serie 2 · 66L · 6 functies', unlocked: false },
+}
+},
+siemens: { label: 'Siemens', models: { 'HB578A0S0': { name: 'Siemens HB578A0S0', sub: 'iQ500 · 71L', unlocked: false } } },
+miele: { label: 'Miele', models: { 'H7164B': { name: 'Miele H7164B', sub: 'Generation 7000 · 76L', unlocked: false } } },
+aeg: { label: 'AEG', models: { 'BSK782320M': { name: 'AEG BSK782320M', sub: 'SurroundCook · 72L', unlocked: false } } },
+samsung: { label: 'Samsung', models: { 'NV7B4430ZAK': { name: 'Samsung NV7B4430ZAK', sub: 'Dual Cook Flex · 76L', unlocked: false } } },
+neff: { label: 'Neff', models: { 'B55VR32N0': { name: 'Neff B55VR32N0', sub: 'N50 · 71L · Slide&Hide', unlocked: false } } },
+whirlpool: { label: 'Whirlpool', models: { 'AKZ9629IX': { name: 'Whirlpool AKZ9629IX', sub: '73L · Absolute', unlocked: false } } },
+zanussi: { label: 'Zanussi', models: { 'ZOHNX3W1': { name: 'Zanussi ZOHNX3W1', sub: '65L · Multifunction', unlocked: false } } },
+gorenje: { label: 'Gorenje', models: { 'BOP747E41BG': { name: 'Gorenje BOP747E41BG', sub: '77L · SteamBake', unlocked: false } } },
+other: { label: 'Ander merk', models: { 'unknown': { name: 'Niet-geregistreerd model', sub: 'Help ons de database uitbreiden', unlocked: false } } }
+};
+
+function updateModels() {
+const brand = document.getElementById('brand-select').value;
+const modelSelect = document.getElementById('model-select');
+modelSelect.innerHTML = '';
+if (!brand || !ovenData[brand]) {
+modelSelect.innerHTML = '<option value="">Selecteer eerst merk</option>';
+return;
+}
+const models = ovenData[brand].models;
+Object.keys(models).forEach(key => {
+const opt = document.createElement('option');
+opt.value = key;
+opt.textContent = key === 'unknown' ? 'Mijn model staat er niet bij' : key;
+modelSelect.appendChild(opt);
+});
+}
+
+function unlockOven() {
+const brand = document.getElementById('brand-select').value;
+const modelKey = document.getElementById('model-select').value;
+if (!brand || !modelKey) {
+alert(currentLang === 'nl' ? 'Selecteer eerst een merk en model.' : 'Please select a brand and model first.');
+return;
+}
+const model = ovenData[brand]?.models[modelKey];
+document.getElementById('app-content').style.display = 'block';
+document.getElementById('app-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+if (model) {
+document.getElementById('model-title').textContent = model.name;
+document.getElementById('model-sub').textContent = model.sub;
+}
+
+// Als model NIET in database: toon contribution mode
+if (model && !model.unlocked) {
+document.getElementById('contribution-zone').classList.add('active-mode');
+}
+}
+
+// ============================================
+// MODE TOGGLE
+// ============================================
+function setMode(mode) {
+document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+document.querySelector(`.mode-btn.${mode}`).classList.add('active');
+document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+document.getElementById(`panel-${mode}`).classList.add('active');
+}
+
+// ============================================
+// RUBRIC TOGGLE
+// ============================================
+function toggleRubric(card) {
+card.classList.toggle('open');
+}
+function toggleSpecial(card) {
+card.classList.toggle('open');
+}
+
+// ============================================
+// CHECKOUT (placeholder — later Mollie koppelen)
+// ============================================
+function checkout(plan) {
+// Placeholder — hier komt de Mollie payment link
+const msgs = {
+once: currentLang === 'nl' ? 'Eénmalige PDF aanschaft — Mollie checkout volgt!' : 'One-time PDF — Mollie checkout coming!',
+monthly: currentLang === 'nl' ? 'Maandabonnement — Mollie checkout volgt!' : 'Monthly subscription — Mollie checkout coming!',
+yearly: currentLang === 'nl' ? 'Jaarabonnement — Mollie checkout volgt!' : 'Yearly subscription — Mollie checkout coming!'
+};
+alert(msgs[plan]);
+}
+
+// ============================================
+// CONTRIBUTION MODE BACKEND SWITCH
+// Zet contributionModeActive op TRUE als je klaar bent
+// ============================================
+const CONTRIBUTION_MODE_ACTIVE = false; // ← schakelaar
+if (CONTRIBUTION_MODE_ACTIVE) {
+document.getElementById('contrib-btn').style.opacity = '1';
+document.getElementById('contrib-btn').onclick = function() {
+alert('Scan functie actief — hier komt de Claude Vision API koppeling');
+};
+}
+</script>
+
+</body>
+</html>
